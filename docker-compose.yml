@@ -19,10 +19,10 @@ services:
     environment:
       - DRONE_GIT_ALWAYS_AUTH=false
       - DRONE_RUNNER_CAPACITY=2
-      # change this
-      - DRONE_SERVER_HOST=http://drone.com
-      # change this
-      - DRONE_GOGS_SERVER=http://gogs.com
+      # change this，不带 http[s]:// 的网址路径
+      - DRONE_SERVER_HOST=drone.example.com
+      # change this，这个要带 http[s]:// 的网址路径
+      - DRONE_GOGS_SERVER=http://gogs.example.com
       - DRONE_SERVER_PROTO=http
       - DRONE_TLS_AUTOCERT=false
       - DRONE_RPC_SECRET=your_random_secret

@@ -11,6 +11,7 @@ services:
       - ./gogs-data:/data
     networks:
       - drone
+    restart: always
   drone-server:
     image: drone/drone:1.0.0-rc.4
     # 映射真机 8002 到 drone 的80端口，使用 localhost:8002 访问，自行添加nginx代理即可

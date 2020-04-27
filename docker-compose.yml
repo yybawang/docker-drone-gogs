@@ -3,7 +3,7 @@ services:
   gogs:
     image: gogs/gogs
     # 映射真机 2223 到 gogs 的 22 端口，用于 git@ 克隆
-    # 映射真机 8003 到 gogs 的 3000 端口，使用 localhost:8003 访问，自行添加nginx代理即可
+    # 映射真机 8003 到 gogs 的 3000 端口，使用 服务器IP:8003 访问，自行添加nginx代理即可
     ports:
       - "2223:22"
       - "8003:3000"
@@ -14,7 +14,7 @@ services:
     restart: always
   drone-server:
     image: drone/drone
-    # 映射真机 8002 到 drone 的80端口，使用 localhost:8002 访问，自行添加nginx代理即可
+    # 映射真机 8002 到 drone 的80端口，使用 服务器IP:8002 访问，自行添加nginx代理即可
     ports:
       - 8002:80
     environment:

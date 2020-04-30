@@ -33,8 +33,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./drone-data:/data
     restart: always
-  drone-agent:
-    image: drone/agent
+  drone-runner:
+    image: drone/drone-runner-docker
     environment:
       - DRONE_RPC_SERVER=drone-server:80
       - DRONE_RPC_SECRET=your_random_secret

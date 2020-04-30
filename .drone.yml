@@ -1,0 +1,75 @@
+# drone 会自动配置
+#clone:
+#  git:
+#    image: plugins/git
+#    depth: 50
+#    tags: true
+
+#workspace:
+#  base: /home
+#  path: www
+
+kind: pipeline
+type: docker
+name: publish
+steps:
+
+
+- name: tar
+  image: alpine:3.8
+  commands:
+  - pwd
+  # 打包代码，然后上传后解压缩
+  - tar -zcvf /home/project.tar.gz ./ --exclude .git --exclude vendor --exclude node_modules
+  - mv /home/project.tar.gz ./
+  when:
+    branch:
+      - master
+
+- name: deploy
+  image: drillster/drone-rsync
+  environment:
+    RSYNC_KEY:
+      # 去 drone 项目设置里配置这个私钥
+      from_secret: rsync_key
+  settings:
+    hosts:
+      - 127.0.0.1
+    user: laradock
+    port: 2222
+    source: ./
+    target: /var/www/project
+    include:
+      - project.tar.gz
+    script:
+      - pwd
+      - cd /var/www/project
+      - pwd
+      - tar -zxvf ./project.tar.gz
+      - composer install --optimize-autoloader
+      - composer dumpautoload
+      - npm install
+      - npm run prod
+      #- \cp -f .env.production.dev .env
+      # - chmod -R 777 storage/
+      # - chmod -R 777 bootstrap/cache/
+      # 必须先清除配置缓存，才能继续生成key，不然laravel安全机制问题
+      # - php artisan config:clear
+      # - php artisan key:generate
+      # - php artisan cache:clear
+      - php artisan queue:restart
+      - rm -f project.tar.gz
+  when:
+    branch:
+      - master
+
+
+- name: notification
+  image: plugins/webhook
+  settings:
+    debug: true
+    urls:
+      - https://sc.ftqq.com/SCU95992Tf7668bc189c19b12ec944ff08ccf8dfa5ea942374b001.send?text=project@master部署完成
+  when:
+    branch:
+      - master

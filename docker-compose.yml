@@ -22,8 +22,13 @@ services:
       - DRONE_RUNNER_CAPACITY=2
       # change this，不带 http[s]:// 的网址路径
       - DRONE_SERVER_HOST=drone.example.com
-      # change this，这个要带 http[s]:// 的网址路径
+      # 如果是gogs，就改这一行，这个要带 http[s]:// 的网址路径
       - DRONE_GOGS_SERVER=http://gogs.example.com
+      # 如果是github，就改这里，自己去 github 里面新建APP，得到这两个参数
+      - DRONE_GITHUB_CLIENT_ID=
+      - DRONE_GITHUB_CLIENT_SECRET=
+      # 控制只能这个 github 用户可以授权，多个用英文逗号分隔，不然会造成所有人都可以用
+      - DRONE_USER_FILTER=GITHUB用户名
       - DRONE_SERVER_PROTO=http
       - DRONE_TLS_AUTOCERT=false
       - DRONE_RPC_SECRET=your_random_secret
@@ -41,6 +46,7 @@ services:
       - DRONE_RUNNER_CAPACITY=2
       - DRONE_SERVER_PROTO=http
       - DRONE_TLS_AUTOCERT=false
+      - DRONE_RPC_HOST=drone-server:80
     depends_on:
       - drone-server
     networks:
